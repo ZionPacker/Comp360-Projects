@@ -2,25 +2,41 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <fstream>
+
 #include "analyzer.hpp"
 #include "lexical_analyzer.hpp"
 #include "lexeme.hpp"
 #include "parser.hpp"
 #include "syntax.h"
 
+/// @brief Reads the contents of a file into a string.
+/// @param filename The filename to open.
+/// @return The contents of the file as a string.
+std::string ReadFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filename);
+    }
 
-
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
 int main() {
-    // Ask the user to enter a string (one-line only).
+    // Ask the user to enter the location of the program to check.
     std::string input;
-    std::cout << "Enter a string to parse: ";
+    std::cout << "Enter the location of the file to check: ";
+    // Read the line and open the file from the input.
     std::getline(std::cin, input);
+
+    std::string file_contents = ReadFile(input);
+
+    // Use the lexical analyzer to generate lexeme objects.
     LexicalAnalyzer analyzer;
-    auto lexemes = analyzer.Analyze(input);
-    for (auto lexeme : lexemes) {
-        std::cout << lexeme.value << " : " << lexeme.GetCategoryString() << std::endl;
-    }
+    auto lexemes = analyzer.Analyze(file_contents);
     std::vector<Lexeme> incorrectCode;
     std::string result = parseProgram(lexemes, incorrectCode);
 
