@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(.)
 include_directories(tests)
 
-add_executable(COMP360_Projects_main
-        tests/lexical_analzyer_tests.hpp
-        tests/tests_main.cpp
+add_executable(main
         analyzer.hpp
         lexeme.cpp
         lexeme.hpp

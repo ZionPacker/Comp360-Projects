@@ -1,0 +1,6 @@
+CMakeFiles/*
+Makefile
+test.CMakeFiles
+CMake*
+cmake*
+main
