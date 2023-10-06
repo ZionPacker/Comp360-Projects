@@ -74,6 +74,10 @@ std::string parseExpr(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorre
     return "Invalid expression";
 }
 
+void reportError(const std::string& erroneousText) {
+    std::cerr << "Syntax error: " << erroneousText << std::endl;
+}
+
 std::string parseProgram(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorrectCode) {
     if (lexemes.size() >= 7 &&
         (lexemes[0].category == KEYWORD) &&
@@ -84,14 +88,26 @@ std::string parseProgram(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& inco
         (lexemes[5].category == PUNCTUATION) &&
         (lexemes[6].category == PUNCTUATION)) {
         lexemes.erase(lexemes.begin(), lexemes.begin() + 7); // Consume the entire program declaration
+        bool lastBraceConsumed = false;
         while (!lexemes.empty()) {
             std::string parseResult;
             if ((parseResult = parseDeclaration(lexemes, incorrectCode)) == "" || (parseResult = parseAssign(lexemes, incorrectCode)) == "") {
                 // Successfully parsed a declaration or assignment
                 continue;
+            } else if (lexemes.size() >= 1 && lexemes[0].category == PUNCTUATION && lexemes[0].value == "}") {
+                // Consume the closing curly brace on a separate line
+                lexemes.erase(lexemes.begin());
+                lastBraceConsumed = true;
             } else {
+                // Report the error with erroneous portion of code
+                reportError(lexemes[0].value);
                 return parseResult;
             }
+        }
+        if (!lastBraceConsumed) {
+            // Report the missing closing curly brace error with erroneous portion of code
+            reportError("}");
+            return "Expected '}' on a separate line";
         }
         return ""; // No error
     }
@@ -99,5 +115,11 @@ std::string parseProgram(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& inco
     for (auto it = lexemes.begin(); it != lexemes.end(); ++it) {
         incorrectCode.push_back(*it);
     }
+    // Report an invalid program error
+    reportError("Invalid program");
     return "Invalid program";
 }
+
+
+
+
