@@ -1,16 +1,22 @@
-//
-// Created by Zion Packer on 10/2/23.
-//
+#ifndef PARSER_H
+#define PARSER_H
 
-#ifndef COMP360_PROJECTS_MAIN_SYNTAX_H
-#define COMP360_PROJECTS_MAIN_SYNTAX_H
-
-#endif //COMP360_PROJECTS_MAIN_SYNTAX_H
-#pragma once
 #include <vector>
-#include "lexeme.hpp" // You may need to include the token structure definition here.
+#include <string>
+#include "lexeme.hpp" // Include your lexeme definition or header file here
 
-std::string parseDeclaration(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorrectCode);
-std::string parseAssign(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorrectCode);
-std::string parseExpr(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorrectCode);
-std::string parseProgram(std::vector<Lexeme>& lexemes, std::vector<Lexeme>& incorrectCode);
+// Function to parse a declaration
+std::string parseDeclaration(std::vector<Lexeme>& lexemes);
+
+// Function to parse an assignment
+std::string parseAssign(std::vector<Lexeme>& lexemes);
+
+// Function to parse an expression
+std::string parseExpr(std::vector<Lexeme>& lexemes);
+
+// Function to parse the entire program
+std::string parseProgram(std::vector<Lexeme>& lexemes);
+
+void reportError(const std::vector<Lexeme>& erroneousLexemes);
+
+#endif // PARSER_H
